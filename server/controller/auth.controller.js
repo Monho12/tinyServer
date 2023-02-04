@@ -31,11 +31,9 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
-
   const user = await User.findOne({ username });
   console.log(user);
   try {
-    console.log("end bna")
     const isEqaul = await bcrypt.compare(password, user.password);
     if (isEqaul) {
       const token = jwt.sign({ user }, process.env.JWT_SECRET, {
