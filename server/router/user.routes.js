@@ -11,10 +11,10 @@ const { roleMiddleware } = require("../middlewares/roleMiddleware");
 const router = express.Router();
 
 router
-  .post("/login", loginUser)
   .get("/users", roleMiddleware, getUsers)
   .get("/users/:id", roleMiddleware, getUser)
   .get("/verify", Verify)
+  .post("/login", loginUser)
   .post("/signup", signupUser)
   .delete("/user/:id", roleMiddleware, deleteUser);
 
