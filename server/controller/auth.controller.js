@@ -31,20 +31,22 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  console.log(user);
-  try {
-    const isEqaul = await bcrypt.compare(password, user.password);
-    if (isEqaul) {
-      const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-        expiresIn: "30min",
-      });
-      res.send(token);
-    } else {
-      res.status(401).send("Username or password is invalid");
+  if (username && password) {
+    const user = await User.findOne({ username });
+    console.log(user);
+    try {
+      const isEqaul = await bcrypt.compare(password, user.password);
+      if (isEqaul) {
+        const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+          expiresIn: "30min",
+        });
+        res.send(token);
+      } else {
+        res.status(401).send("Username or password is invalid");
+      }
+    } catch (error) {
+      res.send("hahah t1 pisda");
     }
-  } catch (error) {
-    res.sendStatus(404);
   }
 };
 
