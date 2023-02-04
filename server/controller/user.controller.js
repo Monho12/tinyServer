@@ -42,18 +42,22 @@ const deleteUser = async (req, res) => {
 };
 
 const Verify = async (req, res) => {
-  try {
-    await jwt.verify(
-      req.headers.authorization,
-      process.env.JWT_SECRET,
-      (error, item) => {
-        if (!error) {
-          res.send(item);
+  if (req.headers.authorization) {
+    try {
+      await jwt.verify(
+        req.headers.authorization,
+        process.env.JWT_SECRET,
+        (error, item) => {
+          if (!error) {
+            res.send(item);
+          }
         }
-      }
-    );
-  } catch (error) {
-    res.send(error);
+      );
+    } catch (error) {
+      res.send(error);
+    }
+  } else {
+    res.status(404).send("Authentication required");
   }
 };
 
