@@ -54,7 +54,7 @@ const Verify = async (req, res) => {
         }
       );
     } catch (error) {
-      res.send(error);
+      res.status(401);
     }
   } else {
     res.status(404).send("Authentication required");

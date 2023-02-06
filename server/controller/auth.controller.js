@@ -18,37 +18,38 @@ const signupUser = async (req, res) => {
           }).save();
           res.send(user);
         } catch (err) {
-          res.send(err);
+          res.status(403);
         }
       }
     } else {
       res.status(401);
     }
   } else {
-    res.status(401);
+    res.sendStatus(401);
   }
 };
 
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  if (username && password) {
-    const user = await User.findOne({ username });
-    if (username === username && password === password) {
-      try {
-        const isEqaul = await bcrypt.compare(password, user.password);
-        if (isEqaul) {
-          const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-            expiresIn: "30min",
-          });
-          res.send(token);
-        } else {
-          res.status(401).send("Username or password is invalid");
-        }
-      } catch (error) {
-        res.send("aldaa zaalaa");
+  const user = await User.findOne({ username });
+
+  if (user) {
+    console.log(user);
+    try {
+      const isEqaul = await bcrypt.compare(password, user.password);
+      if (isEqaul) {
+        const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+          expiresIn: "30min",
+        });
+        res.send(token);
+      } else {
+        res.status(401).send("username or password wrong");
       }
-      console.log(user);
+    } catch (err) {
+      res.status(403);
     }
+  } else {
+    res.status(404).send("No account found");
   }
 };
 
